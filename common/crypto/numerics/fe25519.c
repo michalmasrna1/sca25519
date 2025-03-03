@@ -58,8 +58,15 @@ void fe25519_cswap(fe25519* in1, fe25519* in2, int condition) {
     uint32_t val2 = in2->as_uint32_t[ctr];
     uint32_t temp = val1;
 
-    val1 ^= mask & (val2 ^ val1);
-    val2 ^= mask & (val2 ^ temp);
+    // FI: M-safe error attack
+    // on in1->as_uint32_t[ctr] and in2->as_uint32_t[ctr]
+    // !!! This is incorrect, the memory is overwritten
+    //     in either case
+
+    // FI: M-safe error attack on temp
+
+    val1 ^= mask & (val2 ^ val1); // FI: C-safe error attack
+    val2 ^= mask & (val2 ^ temp); // FI: C-safe error attack
 
     in1->as_uint32_t[ctr] = val1;
     in2->as_uint32_t[ctr] = val2;

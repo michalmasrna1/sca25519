@@ -119,7 +119,7 @@ int crypto_scalarmult_curve25519(uint8_t *r, const uint8_t *s,
 
   // Prepare the scalar within the working state buffer.
   for (i = 0; i < 32; i++) {
-    state.s.as_uint8_t[i] = s[i];
+    state.s.as_uint8_t[i] = s[i]; // FI: Key-shortening
   }
 
   state.s.as_uint8_t[0] &= 248;
@@ -150,7 +150,7 @@ int crypto_scalarmult_curve25519(uint8_t *r, const uint8_t *s,
 
   // Process all the bits except for the last three where we explicitly double
   // the result.
-  while (state.nextScalarBitToProcess >= 0) {
+  while (state.nextScalarBitToProcess >= 0) {  // FI: Loop abort attack
     uint8_t byteNo = (uint8_t)(state.nextScalarBitToProcess >> 3);
     uint8_t bitNo = (uint8_t)(state.nextScalarBitToProcess & 7);
     uint8_t bit;
