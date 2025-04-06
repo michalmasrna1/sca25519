@@ -16,7 +16,7 @@ int main(void) {
   // clock_setup();
   // gpio_setup();
   // usart_setup(115200);
-  rng_enable();
+  // rng_enable();
   // char str[100];
 
   // send_USART_str((unsigned char *)"Program started.");
