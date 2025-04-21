@@ -44,9 +44,9 @@ int main(void) {
   // DWT_CYCCNT = 0;
   // DWT_CTRL |= DWT_CTRL_CYCCNTENA;
   // for (i = 0; i < MAX; i++) {
-    // oldcount = DWT_CYCCNT;
-    crypto_scalarmult_base_curve25519(result, unprotected_key.as_uint8_t);
-    // newcount += (DWT_CYCCNT - oldcount);
+  // oldcount = DWT_CYCCNT;
+  crypto_scalarmult_base_curve25519(result, unprotected_key.as_uint8_t);
+  // newcount += (DWT_CYCCNT - oldcount);
   // }
 
   // sprintf(str, "Cost of scalarmult: %d", (unsigned)(newcount / MAX));

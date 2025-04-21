@@ -150,16 +150,16 @@ int crypto_scalarmult_curve25519(uint8_t *r, const uint8_t *s,
 
   // Process all the bits except for the last three where we explicitly double
   // the result.
-  while (state.nextScalarBitToProcess >= 0) {  // FI: Loop abort attack
+  while (state.nextScalarBitToProcess >= 0) {
     uint8_t byteNo = (uint8_t)(state.nextScalarBitToProcess >> 3);
     uint8_t bitNo = (uint8_t)(state.nextScalarBitToProcess & 7);
     uint8_t bit;
     uint8_t swap;
 
-    bit = 1 & (state.s.as_uint8_t[byteNo] >> bitNo);
-    swap = bit ^ state.previousProcessedBit;
+    bit = 1 & (state.s.as_uint8_t[byteNo] >> bitNo);       // c and m safe error directly on the bits
+    swap = bit ^ state.previousProcessedBit;               // c-safe error directly on the bits
     state.previousProcessedBit = bit;
-    curve25519_cswap(&state, swap);
+    curve25519_cswap(&state, swap);                        // c-safe errors on the swap values
     curve25519_ladderstep(&state);
     state.nextScalarBitToProcess--;
   }
