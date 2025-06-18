@@ -10,8 +10,7 @@ LDSCRIPT   = ../common/stm32f405x6_CCM.ld
 LIBNAME    = opencm3_stm32f4
 ARCH_FLAGS = -mthumb -mcpu=cortex-m4 -mfloat-abi=hard -mfpu=fpv4-sp-d16
 DEFINES    = -DSTM32F4 -DCORTEX_M4 -DWITH_PERFORMANCE_BENCHMARKING
-OBJS	   = stm32f4_wrapper.o test.o \
-			 crypto/asm/cortex_m4_cswap.o crypto/asm/cortex_m4_hsalsa20_block.o crypto/asm/cortex_m4_reduce25519.o crypto/asm/cortex_m4_sqr_fe25519.o crypto/asm/cortex_m4_mpy_fe25519.o crypto/asm/cortex_m4_add_fe25519.o crypto/asm/cortex_m4_mpy_256.o crypto/asm/cortex_m4_mpy121666.o crypto/asm/cortex_m4_sqr_256.o \
+OBJS	   = crypto/asm/cortex_m4_cswap.o crypto/asm/cortex_m4_hsalsa20_block.o crypto/asm/cortex_m4_reduce25519.o crypto/asm/cortex_m4_sqr_fe25519.o crypto/asm/cortex_m4_mpy_fe25519.o crypto/asm/cortex_m4_add_fe25519.o crypto/asm/cortex_m4_mpy_256.o crypto/asm/cortex_m4_mpy121666.o crypto/asm/cortex_m4_sqr_256.o \
 			 crypto/support/randombytes.o \
 			 crypto/scalarmult/scalarmult_25519.o \
 			 crypto/numerics/fe25519.o crypto/numerics/fe25519_invert.o crypto/numerics/bigint.o crypto/numerics/sc25519.o
@@ -22,7 +21,7 @@ CFLAGS		+= -g -O2 \
 		   -Wredundant-decls -Wmissing-prototypes -Wstrict-prototypes \
 		   -Wundef -Wshadow \
 		   -I$(OPENCM3_DIR)/include \
-		   -fno-common $(ARCH_FLAGS) -MD $(DEFINES)
+		   -fno-common $(ARCH_FLAGS) -ffunction-sections -fdata-sections -MD $(DEFINES)
 LDFLAGS		+= --static -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group \
 		   -T$(LDSCRIPT) -nostartfiles -Wl,--gc-sections,--print-gc-sections \
 		   $(ARCH_FLAGS) \
