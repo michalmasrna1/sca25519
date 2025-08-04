@@ -1,6 +1,6 @@
 PREFIX	?= arm-none-eabi
-CC		= $(PREFIX)-gcc
-LD		= $(PREFIX)-gcc
+CC		= $(PREFIX)-gcc-9.2.1
+LD		= $(PREFIX)-gcc-9.2.1
 OBJCOPY	= $(PREFIX)-objcopy
 OBJDUMP	= $(PREFIX)-objdump
 GDB		= $(PREFIX)-gdb
