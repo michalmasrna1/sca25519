@@ -1,6 +1,6 @@
 #include "../include/randombytes.h"
+#include "pcg_basic.h"
 
-#include <libopencm3/stm32/rng.h>
 #include <stdint.h>
 
 void randombytes(unsigned char *x, unsigned long long xlen) {
@@ -10,7 +10,7 @@ void randombytes(unsigned char *x, unsigned long long xlen) {
   } random;
 
   while (xlen > 4) {
-    random.asint = rng_get_random_blocking();
+    random.asint = pcg32_random();
     *x++ = random.aschar[0];
     *x++ = random.aschar[1];
     *x++ = random.aschar[2];
@@ -18,7 +18,7 @@ void randombytes(unsigned char *x, unsigned long long xlen) {
     xlen -= 4;
   }
   if (xlen > 0) {
-    for (random.asint = rng_get_random_blocking(); xlen > 0; --xlen) {
+    for (random.asint = pcg32_random(); xlen > 0; --xlen) {
       *x++ = random.aschar[xlen - 1];
     }
   }
