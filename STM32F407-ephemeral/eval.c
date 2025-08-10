@@ -1,16 +1,13 @@
 #include "crypto/include/crypto_scalarmult.h"
-
-
-const uint8_t public_key[32] = {9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-                                0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-const UN_256bitValue private_key = {
-    {0x80, 0x65, 0x74, 0xba, 0x61, 0x62, 0xcd, 0x58, 0x49, 0x30, 0x59,
-    0x47, 0x36, 0x16, 0x35, 0xb6, 0xe7, 0x7d, 0x7c, 0x7a, 0x83, 0xde,
-    0x38, 0xc0, 0x80, 0x74, 0xb8, 0xc9, 0x8f, 0xd4, 0x0a, 0x43}};
+#include "pcg_basic.h"
 
 int main(void) {
-    uint8_t result[32];
-    crypto_scalarmult_curve25519(result, private_key.as_uint8_t, public_key);
-    return 0;
+  const uint64_t initstate = 0x01234567;  // Will be overwritten in fault-finder
+  const uint64_t initseq = 0x89abcdef;  // Will be overwritten in fault-finder
+  pcg32_srandom(initstate, initseq);
+  const uint8_t public_key[32];
+  const UN_256bitValue private_key;
+  uint8_t result[32];
+  crypto_scalarmult_curve25519(result, private_key.as_uint8_t, public_key);
+  return 0;
 }
