@@ -6,7 +6,6 @@
 
 #endif // #ifdef WITH_PERFORMANCE_BENCHMARKING
 
-#include "../../stm32wrapper.h"
 #include "../include/crypto_scalarmult.h"
 #include "../include/fe25519.h"
 #include "../include/randombytes.h"
