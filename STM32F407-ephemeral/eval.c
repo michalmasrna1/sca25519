@@ -2,8 +2,8 @@
 #include "pcg_basic.h"
 
 int main(void) {
-  const uint64_t initstate = 0x01234567;  // Will be overwritten in fault-finder
-  const uint64_t initseq = 0x89abcdef;  // Will be overwritten in fault-finder
+  const uint64_t initstate = 0x01234567; // Will be overwritten in fault-finder
+  const uint64_t initseq = 0x89abcdef;   // Will be overwritten in fault-finder
   pcg32_srandom(initstate, initseq);
   const uint8_t public_key[32];
   const UN_256bitValue private_key;
