@@ -35,6 +35,17 @@ void fe25519_pack(uint8_t out[32], fe25519* in) {
   }
 }
 
+uint8_t fe25519_equals(uint8_t a[32], uint8_t b[32]) {
+  uint8_t ctr;
+  uint8_t diff = 0;
+
+  for (ctr = 0; ctr < 32; ctr++) {
+    diff |= a[ctr] ^ b[ctr];
+  }
+
+  return diff;
+}
+
 void fe25519_cpy(fe25519* result, const fe25519* in) {
   uint8_t ctr;
 

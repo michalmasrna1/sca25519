@@ -432,6 +432,8 @@ void fe25519_unpack(fe25519* out, const uint8_t in[32]);
 /// the in parameter is non-const.
 void fe25519_pack(uint8_t out[32], fe25519* in);
 
+uint8_t fe25519_equals(uint8_t a[32], uint8_t b[32]);
+
 /// Note that all of the other operations on fe25519 are guaranteed to reduce to
 /// 2^256-38 instead of 2^255-19 only.
 void fe25519_reduceCompletely(fe25519* inout);

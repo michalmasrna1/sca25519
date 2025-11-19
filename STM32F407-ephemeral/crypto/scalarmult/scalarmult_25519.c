@@ -385,11 +385,7 @@ int crypto_scalarmult_curve25519(uint8_t *r, const uint8_t *s,
 
   // Initialize return value with random bits ### alg. step 2 ###
   randombytes(r, 32);
-
-  // Prepare the scalar within the working state buffer.
-  for (i = 0; i < 32; i++) {
-    state.s.as_uint8_t[i] = s[i];
-  }
+  randombytes(&state, sizeof(state));
 
   // Copy the affine x-coordinate of the base point to the state.
   fe25519_unpack(&state.x0, p);
@@ -398,6 +394,45 @@ int crypto_scalarmult_curve25519(uint8_t *r, const uint8_t *s,
   fe25519_setzero(&state.zq);
   fe25519_cpy(&state.xp, &state.x0);
   fe25519_setone(&state.zp);
+
+  // Double 3 times before we start. ### alg. step 6 ###
+  curve25519_doublePointP(&state);
+  curve25519_doublePointP(&state);
+  curve25519_doublePointP(&state);
+
+  // ### alg. step 7 ###
+  INCREMENT_BY_163(fid_counter);
+
+  if (!fe25519_iszero(&state.zp)) // ### alg. step 8 ###
+  {
+    goto fail; // ### alg. step 9 ###
+  }
+
+  ST_curve25519ladderstepWorkingState state_tmp;
+  fe25519_unpack(&state_tmp.x0, p);
+
+  fe25519_setone(&state_tmp.xq);
+  fe25519_setzero(&state_tmp.zq);
+  fe25519_cpy(&state_tmp.xp, &state_tmp.x0);
+  fe25519_setone(&state_tmp.zp);
+
+  curve25519_doublePointP(&state_tmp);
+  curve25519_doublePointP(&state_tmp);
+  curve25519_doublePointP(&state_tmp);
+
+  INCREMENT_BY_163(fid_counter);
+
+  if (!fe25519_iszero(&state_tmp.zp)) {
+    goto fail;
+  }
+
+  // Prepare the scalar within the working state buffer.
+  do {
+    for (i = 0; i < 32; i++) {
+      state.s.as_uint8_t[i] = s[i];
+      INCREMENT_BY_NINE(fid_counter);
+    }
+  } while (fe25519_equals(s, state.s.as_uint8_t) != 0);
 
   // Clamp scalar ### alg. step 3 ###
   state.s.as_uint8_t[31] &= 127;
@@ -410,19 +445,6 @@ int crypto_scalarmult_curve25519(uint8_t *r, const uint8_t *s,
 
   // ### alg. step 5 ###
   INCREMENT_BY_163(fid_counter);
-
-  // Double 3 times before we start. ### alg. step 6 ###
-  curve25519_doublePointP(&state);
-  curve25519_doublePointP(&state);
-  curve25519_doublePointP(&state);
-
-  // ### alg. step 7 ###
-  INCREMENT_BY_163(fid_counter);
-
-  if (!fe25519_iszero(&state.zp))   // ### alg. step 8 ###
-  {
-    goto fail; // ### alg. step 9 ###
-  }
 
   // Optimize for stack usage when implementing  ### alg. step 10 ###
   fe25519_invert_useProvidedScratchBuffers(&state.zp, &state.zp, &state.xq,
@@ -507,14 +529,16 @@ int crypto_scalarmult_curve25519(uint8_t *r, const uint8_t *s,
   INCREMENT_BY_163(fid_counter); // ### alg. step 21 ###
 
   // ### alg. step 22 ###
-  if (fid_counter != (163 * 4 + 251 * 9)) {
+  if (fid_counter != (163 * 5 + 283 * 9)) {
   fail:
     retval = -1;
-    randombytes(state.xp.as_uint8_t, 32);  // ### alg. step 23 ###
+    randombytes(r, 32); // ### alg. step 23 ###
   } else {
     retval = 0;
+    do {
+      fe25519_pack(r, &state.xp);
+    } while (fe25519_equals(r, state.xp.as_uint8_t) != 0);
   }
-  fe25519_pack(r, &state.xp);
   return retval;
 }
 
