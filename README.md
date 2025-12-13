@@ -1,3 +1,7 @@
+# Introduction
+
+This is the fork of the sca25519 library used for the (unpublished as of Dec 2025) Master's thesis titled "Simulation-based fault-injection evaluation methodology for cryptolibraries". The original README follows.
+
 # The sca25519 library ("SCA-secure ECC in software – mission impossible?")
 
 This repository accompanies the paper **SCA-secure ECC in software – mission impossible?** available at 
